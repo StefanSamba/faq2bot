@@ -20,8 +20,8 @@ You will need the following files:
  3 Upload in Flow.ai (We'll create that one in the process)
 
 2.1 Web Scraper.ipynb or Web Scraper.py
-This is the main file for scraping elements from a site. Make sure to adjust:
-- Your page to scrape, see “insert page to scrape” in file
+This is the main file for scraping elements from a site. You can select the singlepage or multipage folder depending on the set-up of your FAQ page. Make sure to adjust:
+- Your page(s) to scrape, see “insert page to scrape” in file
 - Elements that represent the questions, see “Create list of questions” in file
 - Elements that represent the answers, see “Create list of answers” in file
 
