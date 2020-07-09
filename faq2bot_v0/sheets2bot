@@ -555,10 +555,10 @@
     "#create from excel\n",
     "data = create_flows_intents_actions (data, questions, answers)\n",
     "\n",
-    "#tg = add_textgen (data)\n",
-    "with open('test1.json') as json_file:\n",
+    "tg = add_textgen (data)\n",
+    "with open('general_nl.json') as json_file:\n",
     "    a = json.load(json_file)\n",
-    "b = data #change to tg / data\n",
+    "b = tg #change to tg / data\n",
     "\n",
     "new = merge_flows (a,b)\n"
    ]
@@ -649,7 +649,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "feedbackyes = find_flow(merged, \"06 Feedback\")['steps'][1]['actions'][1]['actionId']"
+    "#feedbackyes = find_flow(merged, \"06 Feedback\")['steps'][1]['actions'][1]['actionId']"
    ]
   },
   {
@@ -669,7 +669,7 @@
     }
    ],
    "source": [
-    "feedbackyes"
+    "#feedbackyes"
    ]
   },
   {
@@ -694,7 +694,7 @@
     }
    ],
    "source": [
-    "find_action(merged,feedbackyes)"
+    "#find_action(merged,feedbackyes)"
    ]
   },
   {

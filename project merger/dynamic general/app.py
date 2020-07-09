@@ -36,7 +36,7 @@ answers = list(qa['Answers'])
 data = create_flows_intents_actions (data, questions, answers)
 
 tg = add_textgen (data)
-with open('general nl.json') as json_file:
+with open('general nl1.json') as json_file:
     a = json.load(json_file)
 b = tg
 
@@ -55,3 +55,5 @@ merged = replace_handoff_email (merged, orgdict['Support Email'])
 
 with open('merged_projects.json', 'w') as f:
     json.dump(merged, f)
+
+print("conversion done")

@@ -1,12 +1,12 @@
+
+import json
 import random, string
 import pandas as pd
-import json
+import numpy as np
+from collections import defaultdict
 import requests
 
-def keygen():
-    k = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(16))
-    return k
-    
+
 def createflowsteps (title, actionId, intentId, stepId):#
     return [{'meta': {'audioHashes': []},
    'type': 'INTENT',
@@ -17,6 +17,7 @@ def createflowsteps (title, actionId, intentId, stepId):#
    'stepId': stepId,
    'intent': {'intentId': intentId}}]
 
+
 def createflow (title, actionId, flowId, intentId, stepId):
     return {
         'flowId': '4cc34237-cbd9-4e08-8a4e-d1104c34ea5b',
@@ -25,6 +26,7 @@ def createflow (title, actionId, flowId, intentId, stepId):
         'metadata': [],
         'steps': createflowsteps (title, actionId, intentId, stepId),
         'title': title}
+
 
 def createintent (title, brainId, intentId):
     return {
@@ -37,12 +39,15 @@ def createintent (title, brainId, intentId):
             ],
          'title': title}
 
+
+
 def createaction (actionId, brainId, answer):
     return {
         'actionId': actionId,
         'brainId': brainId,
         'payload': {'texts': [answer], 'quickReplies': [], 'tags': []},
         'type': 'TEXT'}
+
 
 # TextGen API
 def textgen(sentence, lang):
@@ -70,7 +75,7 @@ def textgen(sentence, lang):
     # print(example)
     response = requests.request("POST", url, data=example, headers=headers)
     return(response)
-
+    
 # Get Trainings Data from API in list
 def get_td (sentence, lang):
     response = textgen(sentence,lang)
@@ -78,12 +83,19 @@ def get_td (sentence, lang):
     td = [item[0] for item in json_data]
     return td
 
+
 # create training examples
 def create_td (list_sentences):
     td = []
     for example in list_sentences:  
          td.append({'entities': [], 'query': example})
     return td
+
+
+def keygen():
+    k = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(16))
+    return k
+
 
 def create_flows_intents_actions (project, questions, answers):
     keys = ["actionId","intentId", "flowId", "stepId"]
@@ -110,6 +122,7 @@ def create_flows_intents_actions (project, questions, answers):
     project['brains'][0]['actions'] = actions
     return project
 
+
 def add_textgen (project):
     intents = project['brains'][0]['intents']
     for i in range(len(intents)):
@@ -121,34 +134,37 @@ def add_textgen (project):
         project['brains'][0]['intents'][i]['examples']=examples
     return project
 
-
-# merge projects
 def merge_flows (prjct_base,prjct_head):
     for flow in prjct_head['brains'][0]['flows']:
         prjct_base['brains'][0]['flows'].append(flow)
     return prjct_base
 
 def merge_intents (prjct_base,prjct_head):
-    # brainId = prjct_base['brains'][0]['brain']['brainId']
+    brainId = prjct_base['brains'][0]['brain']['brainId']
     for intent in prjct_head['brains'][0]['intents']:
         prjct_base['brains'][0]['intents'].append(intent)
     return prjct_base
 
 def merge_actions (prjct_base,prjct_head):
-    # brainId = prjct_base['brains'][0]['brain']['brainId']
+    brainId = prjct_base['brains'][0]['brain']['brainId']
     for action in prjct_head['brains'][0]['actions']:
         prjct_base['brains'][0]['actions'].append(action)
     return prjct_base
+
 
 def find_flow (project, flowname):
     for flow in project['brains'][0]['flows']:
         if flow['title']==flowname:
             return(flow)
+    print("No flow found")
+
+
 
 def find_action (project,actionId):
-    for action in project['brains'][0]['actions']:
+    for action in merged['brains'][0]['actions']:
         if action['actionId']==actionId:
             return(action)
+    print("No action found")
         
 def find_integration (project,integrationId):
     for i in range(len(project['integrations'])):
@@ -156,17 +172,26 @@ def find_integration (project,integrationId):
             print("integration index : ",i)
             return project['integrations'][i]
         
+
+# fill opening with organization name and chatbot name
 def create_opening (project, organizationName, chatbotName):
+    openingflow = find_flow (project, "02 Opening")
+    firstactionId = openingflow['steps'][0]['actions'][0]['actionId']
+    brainId = project['brains'][0]['brain']['brainId']
     
-    opening = {'actionId': '3d721dcc-0978-4604-824b-d6c904fc94a2',
-     'brainId': '2233f6d1-2817-4ff2-bca4-e095918e66c8',
+    opening = {'actionId': firstactionId,
+     'brainId': brainId,
      'payload': {'texts': ['Welkom bij {}! Ik ben {}, jouw virtuele assistent.'.format((organizationName),chatbotName)],
       'quickReplies': [],
       'tags': []},
      'type': 'TEXT'}
     
-    #print(project['brains'][0]['actions'][13])
-    project['brains'][0]['actions'][13]=opening
+    actions = project['brains'][0]['actions']
+    for i in range(len(actions)):
+        if actions[i]['actionId'] == firstactionId:
+            print("index of opening actions ",i)
+            project['brains'][0]['actions'][i]=opening
+            
     return project
 
 
@@ -176,6 +201,7 @@ def create_card (topic, list_of_questions, imgurl):
       'buttons': create_button (list_of_questions),
       'media': create_media ('https://source.unsplash.com/featured/?'+str(topic))}
 
+
 def create_button (list_of_questions):
     buttons = []
     for question in list_of_questions:
@@ -184,13 +210,19 @@ def create_button (list_of_questions):
             continue
     return buttons
 
-#images only
 def create_media (imgurl):
     return {'type': 'image','url': imgurl}
 
-def create_carousel (df, project, unique_topics):
-    opening_carousel = {'actionId': 'fa67d2e1-6b4e-42e1-9107-548a47282970',
-     'brainId': '2233f6d1-2817-4ff2-bca4-e095918e66c8',
+def create_carousel (project, unique_topics, df):
+
+    menuflow = find_flow (project, "03 Menu")
+    carouselactionId = menuflow['steps'][1]['actions'][0]['actionId']
+    brainId = project['brains'][0]['brain']['brainId']
+
+    
+    
+    opening_carousel = {'actionId': carouselactionId,
+     'brainId': brainId,
      'payload': {'fallback': '',
       'response': {'type': 'carousel',
        'payload': {'cards': []
@@ -204,8 +236,21 @@ def create_carousel (df, project, unique_topics):
         card = create_card (topic, q, "imgurl")
         opening_carousel['payload']['response']['payload']['cards'].append(card)
     
-    project['brains'][0]['actions'][4] = opening_carousel
+    
+    
+    actions = project['brains'][0]['actions']
+    for i in range(len(actions)):
+        if actions[i]['actionId'] == carouselactionId:
+            print("index of carousel actions ",i)
+            project['brains'][0]['actions'][i]=opening_carousel
+            
+    
     return project
+    
+
+
+# # Replace Handoff email adress
+
 
 def replace_handoff_email (project, supportemail):
     integration = project['integrations'][3]
@@ -215,9 +260,7 @@ def replace_handoff_email (project, supportemail):
     project['integrations'][3]['cloudCode'] = CC
     return project
 
-def replace_text_in_reply (project, actionId, replace, replace_with):
-    actions = project['brains'][0]['actions']
-    for i in range(len(actions)):
-        if actions[i]['actionId']==actionId:
-            actions[i]['payload']['texts'][0] = actions[i]['payload']['texts'][0].replace(replace, replace_with)
-    return project
+
+
+
+
