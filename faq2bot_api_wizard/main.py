@@ -59,14 +59,14 @@ def index():
         merged = replace_handoff_email (merged, supportEmail)
 
 
-        with open('merged_projects.json', 'w') as f:
-            json.dump(merged, f)
+        #with open('merged_projects.json', 'w') as f:
+        #    json.dump(merged, f)
 
         #print("Done")
 
         return merged
     else:
-        return jsonify({"about":"Flow.ai FAQ2BOT API"})
+        return jsonify({"about":"Flow.ai Botgenerator API"})
 
 
 if __name__ == '__main__':
