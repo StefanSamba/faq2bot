@@ -1,0 +1,10 @@
+{
+    "textgen" : "false",
+    "language": "en",
+    "questions": ["how do I order food", "where is the sea?"],
+    "answers": ["You can always use Uber Eats", "Roll down the hill and you will find it or get stuck in a local minima."],
+    "topics": ["food", "sea"],
+    "chatbotName": "Pablo",
+    "organizationName": "SambaBV",
+    "supportEmail": "support@sambabv.nl"
+}
