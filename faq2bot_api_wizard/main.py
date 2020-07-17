@@ -21,6 +21,7 @@ def index():
         chatbotName = api_input['chatbotName']
         organizationName = api_input['organizationName']
         supportEmail = api_input['supportEmail']
+        handoffType = api_input["handoffType"]
 
 
         #return metric
@@ -52,17 +53,31 @@ def index():
         new = merge_intents (new,b)
         merged = merge_actions (new,b)
 
+        with open('handoff/handoff_{}_{}.json'.format(handoffType,lang)) as json_file:
+            handoff = json.load(json_file)        
+
+        print("Merging with Handoff")
+        merged = merge_flows (merged,handoff)
+        merged = merge_intents (merged,handoff)
+        merged = merge_actions (merged,handoff)
+
+
+
+        # ADD HANDOFF EVENT TO
+        # Feedback Negative, Talk To Agent, Unknown
+        #if handoffType == "ticket":
+         #   merged = replace_handoff_email (merged, supportEmail)
+
         print("Tailoring Opening, Menu and Support")
         merged = create_opening (merged, organizationName, chatbotName,lang)
         unique_topics = sorted(df.Topic.unique())
         merged = create_carousel (merged, unique_topics,df)
-        merged = replace_handoff_email (merged, supportEmail)
 
 
         #with open('merged_projects.json', 'w') as f:
         #    json.dump(merged, f)
 
-        #print("Done")
+        print("Done")
 
         return merged
     else:
