@@ -165,6 +165,13 @@ def merge_actions (prjct_base,prjct_head):
 
     return prjct_base
 
+def merge_integrations (prjct_base,prjct_head):
+    existingActions = [integration['actionName'] for integration in prjct_base['integrations']]
+    for integration in prjct_head['integrations']:
+        if integration['actionName'] not in existingActions:
+            prjct_base['integrations'].append(integration)
+    return prjct_base
+
 def remove_double_intents (project):
     count = {}
     intents = project['brains'][0]['intents']
@@ -187,7 +194,7 @@ def remove_double_intents (project):
             # count -1 
     project['brains'][0]['intents'] = intents
     return project
-    
+
 
 
 def find_flow (project, flowname):
