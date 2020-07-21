@@ -135,21 +135,59 @@ def add_textgen (project, lang):
     return project
 
 def merge_flows (prjct_base,prjct_head):
+    numberPrior = len(prjct_base['brains'][0]['flows'])
+
     for flow in prjct_head['brains'][0]['flows']:
         prjct_base['brains'][0]['flows'].append(flow)
+
+    numberAfter = len(prjct_base['brains'][0]['flows'])
+
+    print("Length of flows from {}, to {}".format(numberPrior,numberAfter))
+
     return prjct_base
 
 def merge_intents (prjct_base,prjct_head):
-    #brainId = prjct_base['brains'][0]['brain']['brainId']
+    numberPrior = len(prjct_base['brains'][0]['intents'])
     for intent in prjct_head['brains'][0]['intents']:
         prjct_base['brains'][0]['intents'].append(intent)
+    numberAfter = len(prjct_base['brains'][0]['intents'])
+    print("Length of intents from {}, to {}".format(numberPrior,numberAfter))
+
     return prjct_base
 
 def merge_actions (prjct_base,prjct_head):
-    #brainId = prjct_base['brains'][0]['brain']['brainId']
+    numberPrior = len(prjct_base['brains'][0]['actions'])
     for action in prjct_head['brains'][0]['actions']:
         prjct_base['brains'][0]['actions'].append(action)
+    numberAfter = len(prjct_base['brains'][0]['actions'])
+
+    print("Length of actions from {}, to {}".format(numberPrior,numberAfter))
+
     return prjct_base
+
+def remove_double_intents (project):
+    count = {}
+    intents = project['brains'][0]['intents']
+    for intent in intents:
+        if intent['intentId'] not in count:
+            count[(intent["intentId"])] = 1
+        elif intent['intentId'] in count:
+            count[(intent["intentId"])] += 1
+    
+    for key in count:
+        if count[key]>1:
+            #print(key)
+            for intent in intents:
+                if intent['intentId'] == key:
+                    intents.remove(intent)
+                    count[key]-=1
+                    #print("removed key")
+                    break
+            #remove intent
+            # count -1 
+    project['brains'][0]['intents'] = intents
+    return project
+    
 
 
 def find_flow (project, flowname):

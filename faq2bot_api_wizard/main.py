@@ -72,6 +72,7 @@ def index():
         merged = create_opening (merged, organizationName, chatbotName,lang)
         unique_topics = sorted(df.Topic.unique())
         merged = create_carousel (merged, unique_topics,df)
+        merged = remove_double_intents (merged)
 
 
         #with open('merged_projects.json', 'w') as f:
