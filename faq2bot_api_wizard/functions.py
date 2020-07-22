@@ -216,6 +216,24 @@ def find_integration (project,integrationId):
         if project['integrations']['integrationId']==integrationId:
             print("integration index : ",i)
             return project['integrations'][i]
+
+def find_handoff_ids (project, nameofflows):
+    action_handoffs = []
+    flows = project["brains"][0]['flows']
+    for flow in flows:
+        if flow['title'] in nameofflows:
+            actionId = flow['steps'][-1]['actions'][-1]['actionId']
+            action_handoffs.append(actionId)
+    return action_handoffs
+
+def add_handoff_event (project, action_handoffs):
+    actions = project["brains"][0]['actions']
+    for actionId in action_handoffs:
+        for i in range(len(actions)):
+            if actions[i]["actionId"] == actionId:
+                project["brains"][0]['actions'][i]["payload"]["eventName"] = 'Handoff'
+                #print(project["brains"][0]['actions'][i])
+    return project
         
 
 # fill opening with organization name and chatbot name

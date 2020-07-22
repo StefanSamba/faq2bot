@@ -63,8 +63,16 @@ def index():
         merged = merge_integrations(merged,handoff)
         merged = remove_double_intents (merged)
 
+        # add Feedback event to:
+        handoff_en = ["04 Talk to agent", "05 Unknown", "06 Feedback"]
+        handoff_nl = ["04 Medewerker spreken", "05 Onbekend", "06 Feedback"]
 
+        if lang == "en":
+            action_handoffs = find_handoff_ids (merged, handoff_en)
+        if lang =="nl":
+            action_handoffs = find_handoff_ids (merged, handoff_nl)
 
+        merged = add_handoff_event (merged, action_handoffs)
 
 
         # ADD HANDOFF EVENT TO
