@@ -77,8 +77,8 @@ def index():
 
         # ADD HANDOFF EVENT TO
         # Feedback Negative, Talk To Agent, Unknown
-        #if handoffType == "ticket":
-         #   merged = replace_handoff_email (merged, supportEmail)
+        if "ticket" in handoffType:
+            merged = replace_handoff_email (merged, supportEmail)
 
         print("Tailoring Opening, Menu and Support")
         merged = create_opening (merged, organizationName, chatbotName,lang)

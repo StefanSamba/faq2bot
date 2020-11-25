@@ -10,7 +10,7 @@ def index():
         api_input = request.get_json()
         textgen = api_input['textgen']
         lang = api_input['language']
-        #excel = api_input['excelurl']
+        excel = api_input['excelurl']
 
         #return metric
         print("start running")
@@ -55,7 +55,7 @@ def index():
         new = merge_intents (new,b)
         merged = merge_actions (new,b)
 
-        with open('handoff_live_chat_en.json') as json_file:
+        with open('handoff_live_chat_{}.json'.format(lang)) as json_file:
             handoff = json.load(json_file)
 
         print("Merging with Handoff")
