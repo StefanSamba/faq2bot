@@ -58,7 +58,7 @@ def uploaded_file(filename):
     n_items = max(df.count())
     qa = df[:n_items]
 
-# get Organization Info
+    # get Organization Info
     df2 = pd.read_excel(xls, "Introduction")
     df2.columns = ['row', 'faq2bot instruction', 'none', 'label', 'value']
     orgdict = df2.set_index('label')['value'].to_dict()
@@ -99,8 +99,15 @@ def uploaded_file(filename):
         }
     response = requests.request("POST", url, headers=headers, data = payload)
     content = json.loads(response.text)
-    return Response(json.dumps(content), mimetype='application/json', headers={"Content-disposition":
-                 "attachment; faq2bot_upload_to_flowai.json"})
+    # print(f"content: {content}")
+    #return Response(json.dumps(content), mimetype='application/json', )
+
+    fname= filename[:-5]
+    return Response(
+        json.dumps(content),
+        mimetype="application/json",
+        headers={"Content-disposition":
+                 f"attachment; filename=flowai_{fname}.json"})
 
 
 
