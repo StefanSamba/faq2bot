@@ -52,35 +52,36 @@ def createaction (actionId, brainId, answer):
 # TextGen API
 def textgen(sentence, lang):
     
-    url = "https://textgenapp-259408.appspot.com/textgen"
-
-    payload = {
-        'input sentences': [sentence],
-        'lang': lang
-    }
+    url = "https://data-augment.ew.r.appspot.com/augment"
+    data={"sequences" :[sentence]}
     headers = {
-        'Content-Type': "application/json",
-        'User-Agent': "PostmanRuntime/7.19.0",
-        'Accept': "*/*",
-        'Cache-Control': "no-cache",
-        'Postman-Token': "e6565f73-3b8d-4dff-82c6-8b5ef3c969ec,6118f8fa-8824-419b-8558-5e84893cc8c9",
-        'Host': "textgenapp-259408.appspot.com",
-        'Accept-Encoding': "gzip, deflate",
-        'Content-Length': "89",
-        'Connection': "keep-alive",
-        'cache-control': "no-cache"
-        }
+    'Content-Type': 'application/json',
+    'Postman-Token': 'c70dae30-6834-42a4-a1f6-8b998e689591',
+    'cache-control': 'no-cache'
+    }
     
-    example = str(json.dumps(payload))
-    # print(example)
-    response = requests.request("POST", url, data=example, headers=headers)
-    return(response)
+    response = requests.request("POST", url, headers=headers, data=json.dumps(data))
+    result = json.loads(response.text)
+
+    #format Results
+    all_suggestions = result['suggestions']
+    max_length = len(all_suggestions)
+    if len(all_suggestions) > 10:
+        max_length = 10
+        
+    formatted_result = []
+    for i in range(max_length):
+        #print(all_suggestions[i])
+        text, confidence = all_suggestions[i]['text'],all_suggestions[i]['confidence']
+        formatted_result.append([text,confidence])
+    #print(formatted_result)
+    return(formatted_result)
     
 # Get Trainings Data from API in list
 def get_td (sentence, lang):
     response = textgen(sentence,lang)
-    json_data = json.loads(response.text)
-    td = [item[0] for item in json_data]
+    #json_data = json.loads(response.text)
+    td = [item[0] for item in response if item[1] > 0.1]
     return td
 
 
