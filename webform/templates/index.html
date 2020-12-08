@@ -1,13 +1,147 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <title>File Upload</title>
+    <title>Educational registration form</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <style>
+      html, body {
+      min-height: 100%;
+      }
+      body, div, form, input, select, p { 
+      padding: 0;
+      margin: 0;
+      outline: none;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 16px;
+      color: #eee;
+      }
+      body {
+      background: url("https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1867&q=80") no-repeat center;
+      background-size: cover;
+      }
+      h1, h2 {
+      text-transform: uppercase;
+      font-weight: 400;
+      }
+      h2 {
+      margin: 0 0 0 8px;
+      }
+      .main-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 25px;
+      background: rgba(0, 0, 0, 0.5); 
+      }
+      .left-part, form {
+      padding: 25px;
+      }
+      .left-part {
+      text-align: center;
+      }
+      .fa-graduation-cap {
+      font-size: 72px;
+      }
+      form {
+      background: rgba(0, 0, 0, 0.7); 
+      }
+      .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      }
+      .info {
+      display: flex;
+      flex-direction: column;
+      }
+      input, select {
+      padding: 5px;
+      margin-bottom: 30px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #eee;
+      }
+      input::placeholder {
+      color: #eee;
+      }
+      option:focus {
+      border: none;
+      }
+      option {
+      background: black; 
+      border: none;
+      }
+      .checkbox input {
+      margin: 0 10px 0 0;
+      vertical-align: middle;
+      }
+      .checkbox a {
+      color: #E50770;
+      }
+      .checkbox a:hover {
+      color: #E50770;
+      }
+      .btn-item, button {
+      padding: 10px 5px;
+      margin-top: 20px;
+      border-radius: 5px; 
+      border: none;
+      background: #E50770; 
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 400;
+      color: #fff;
+      }
+      .btn-item {
+      display: inline-block;
+      margin: 20px 5px 0;
+      }
+      button {
+      width: 100%;
+      }
+      button:hover, .btn-item:hover {
+      background: #BC125D;
+      }
+      @media (min-width: 568px) {
+      html, body {
+      height: 100%;
+      }
+      .main-block {
+      flex-direction: row;
+      height: calc(100% - 50px);
+      }
+      .left-part, form {
+      flex: 1;
+      height: auto;
+      }
+      }
+    </style>
   </head>
   <body>
-    <h1>File Upload</h1>
-    <form method="POST" action="/upload" enctype="multipart/form-data">
-      <p><input type="file" name="inputFile" accept=".xlsx"></p>
-      <p><input type="submit" value="Submit"></p>
-    </form>
+    <div class="main-block">
+      <div class="left-part">
+        <i class="fas fa-graduation-cap"></i>
+        <h1>FAQ2BOT</h1>
+        <p>Flow.ai provides a service to generate a chatbot straight from an excel file.  Download the template, fill out your company details & FAQs, download as .xlsx and and upload it here. You can upload the downloaded .json file in the Project Settings after logging in </p>
+        <div class="btn-group">
+          <a class="btn-item" href="https://docs.google.com/spreadsheets/d/1xEGk2R11Ayz4Y_QGIBhYZg0YvP3HQN5UuO1i4h2na88/edit?usp=sharing" target="_blank">Download Template</a>
+          <a class="btn-item" href="https://app.flow.ai/" target="_blank">Login to Flow.ai</a>
+
+        </div>
+      </div>
+      <form method="POST" action="/upload" enctype="multipart/form-data">
+        <div class="title">
+          <i class="fas fa-pencil-alt"></i> 
+          <h2>File Upload</h2>
+        </div>
+        <div class="info">
+          <input type="file" name="inputFile" accept=".xlsx">
+        </div>
+        <button type="submit" value="Submit">Submit</button>
+      </form>
+    </div>
   </body>
 </html>

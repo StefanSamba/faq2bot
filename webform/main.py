@@ -7,10 +7,7 @@ import json
 
 
 ALLOWED_EXTENSIONS = {'xlsx'}    
-UPLOAD_FOLDER = './uploads/'
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['RESULT_FOLDER'] = './results/'
 
 @app.route("/")
 def index():
@@ -23,14 +20,19 @@ def allowed_file(filename):
 def upload():
     file=request.files['inputFile']
     filename = secure_filename(file.filename)
-    print("filename", filename)    
+    DATA_DIRECTORY = os.path.join("tmp", filename)
+    #IMAGE_DIRECTORY = "tmp"
+    
+    print("filename", filename)  
+    DATA_DIRECTORY = os.path.join("tmp", filename)
+    path = "/" + DATA_DIRECTORY
 
     # TBD
     if filename != "":
         if not allowed_file(filename):
             return "FileError: Only .CSV"
         elif allowed_file(filename):
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))    
+            file.save(path)    
             return redirect(url_for('uploaded_file', filename=filename))
             #return filename
 
@@ -38,16 +40,12 @@ def upload():
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     print('Routed to uploaded file...')
-
-    # change to app.config['RESULT_FOLDER']
-    #df = pd.read_csv(
-        
-    filepath = app.config['UPLOAD_FOLDER']+str(filename)
+    DATA_DIRECTORY = os.path.join("tmp", filename)
+    path = "/" + DATA_DIRECTORY
 
     print("Preparing Data")
     # Work with XSLX and define variables
-
-    xls = pd.ExcelFile(filepath)
+    xls = pd.ExcelFile(path)
 
     # check if tab exists or error
     df1 = pd.read_excel(xls, "FAQ's")
